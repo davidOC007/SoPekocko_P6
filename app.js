@@ -4,10 +4,13 @@ const app = express();
 const helmet = require ('helmet');
 const bodyParser = require('body-parser');
 const path = require('path');
+
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
 
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.hvcrj.mongodb.net/${process.env.DB_CLUSTER}?retryWrites=true&w=majority`,
+
+require('dotenv').config();
+mongoose.connect(process.env.DB_URI,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -23,6 +26,9 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cl
   });
   
   app.use(helmet());
+
+ 
+  
   app.use('/images', express.static(path.join(__dirname, 'images')));
   app.use('/api/auth', userRoutes);
   app.use('/api/sauces', sauceRoutes);
